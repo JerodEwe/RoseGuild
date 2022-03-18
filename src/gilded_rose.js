@@ -62,4 +62,6 @@ function update_quality() {
   }
   return items
 }
+
+exports.items = items;
 exports.update_quality = update_quality;
