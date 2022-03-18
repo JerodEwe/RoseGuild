@@ -1,11 +1,12 @@
+//Dont touch, demons!
 function Item(name, sell_in, quality) {
   this.name = name;
   this.sell_in = sell_in;
   this.quality = quality;
 }
 
+//Dont touch, demons!
 var items = []
-
 items.push(new Item('+5 Dexterity Vest', 10, 20));
 items.push(new Item('Aged Brie', 2, 0));
 items.push(new Item('Elixir of the Mongoose', 5, 7));
@@ -59,4 +60,6 @@ function update_quality() {
       }
     }
   }
+  return items
 }
+exports.update_quality = update_quality;

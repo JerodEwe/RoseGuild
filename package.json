@@ -1,0 +1,25 @@
+{
+  "name": "gilded-rose-javascript",
+  "version": "1.0.0",
+  "description": "Functional interview kata",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts":{
+    "test": "node ./node_modules/mocha/bin/mocha spec/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guyroyse/gilded-rose-javascript.git"
+  },
+  "author": "Jerod Ewert",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guyroyse/gilded-rose-javascript/issues"
+  },
+  "homepage": "https://github.com/guyroyse/gilded-rose-javascript#readme",
+  "dependencies": {
+    "mocha": "^9.2.2"
+  }
+}
