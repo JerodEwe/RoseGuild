@@ -36,16 +36,10 @@ describe("Test Gilded Rose", function() {
   };
 
   it("should never make the quality negative from updates",()=>{
-    let updated = multiUpdate(1);
-    updated.map((item)=>{
-      assert(item.quality >= 0);
-    });
-
-    updated = multiUpdate(52);
+    let updated = multiUpdate(52);
     updated.map((item)=>{
       assert(item.quality >= 0);
     });
   })
-
 
 });
