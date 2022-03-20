@@ -69,11 +69,16 @@ describe("Test Gilded Rose", function () {
   it('Backstage passes increase in quality as their date approaches now',()=>{
     const itemName = 'Backstage passes to a TAFKAL80ETC concert'
     const itemQuality = findItem(items, itemName).quality
-    console.log(itemQuality)
-
-    console.log(findItem(rose.update_quality(itemName))).quality
+    const updatedQuality = findItem(
+        rose.update_quality(items), 
+        itemName
+      ).quality
+    assert(updatedQuality > itemQuality)
   })
-  // it('Backstage passes increase in value by 2 as their date <10',()=>{})
+ 
+  it('Backstage passes increase in value by 2 as their date <10',()=>{
+    //console.log(findItem(items, 'Backstage passes to a TAFKAL80ETC concert'));
+  })
   // Set the date by repeated calls to update
 
   // it('Backstage passes increase in value by 3 as their date < 5',()=>{})
@@ -83,15 +88,11 @@ describe("Test Gilded Rose", function () {
     const normalItemQuality = findItem(items, normalItemName).quality
     const updatedNormalItemQuality = findItem(rose.update_quality(items), normalItemName).quality
     const normalQualityChange = normalItemQuality - updatedNormalItemQuality
-    console.log('normalItemQuality', normalItemQuality)
-    console.log('updatedNormalItemQuality', updatedNormalItemQuality)
-    
+
     const cake = 'Conjured Mana Cake'
     const conjuredItemQuality = findItem(items, cake).quality
     const updatedConjuredItemQuality = findItem(rose.update_quality(items), cake).quality
     const conjuredItemQualityChange = conjuredItemQuality - updatedConjuredItemQuality
-    console.log('conj', conjuredItemQuality);
-    console.log('updatedConj',updatedConjuredItemQuality)
     
     const ratio = conjuredItemQualityChange / normalQualityChange
     assert(ratio == 2)
