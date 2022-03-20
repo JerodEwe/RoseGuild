@@ -17,7 +17,7 @@ describe("Test Gilded Rose", function () {
     const count = items.reduce((prev, current, total) => {
       return total + (current.quality ? 1 : 0)
     })
-    assert.equal(items.length, count);
+    assert.equal(items.length, count)
   });
 
   it("Should have the sell_in property for each item", () => {
@@ -66,7 +66,13 @@ describe("Test Gilded Rose", function () {
     assert(updatedQuality >= originalQuality)
   });
 
-  it('Backstage passes increase in value as their date approaches now',()=>{})
+  it('Backstage passes increase in quality as their date approaches now',()=>{
+    const itemName = 'Backstage passes to a TAFKAL80ETC concert'
+    const itemQuality = findItem(items, itemName).quality
+    console.log(itemQuality)
+
+    console.log(findItem(rose.update_quality(itemName))).quality
+  })
   // it('Backstage passes increase in value by 2 as their date <10',()=>{})
   // Set the date by repeated calls to update
 
