@@ -66,19 +66,41 @@ describe("Test Gilded Rose", function () {
     assert(updatedQuality >= originalQuality)
   });
 
+  const decreaseSellDays = (items, itemName, targetDays)=>{
+    const item = findItem(items, itemName)
+    let daysLeft = item.sell_in
+    while(daysLeft > targetDays){
+      daysLeft = findItem(
+        rose.update_quality(items), 
+        itemName
+      ).sell_in
+    }
+    return item
+  } 
+
   it('Backstage passes increase in quality as their date approaches now',()=>{
     const itemName = 'Backstage passes to a TAFKAL80ETC concert'
     const itemQuality = findItem(items, itemName).quality
-    const updatedQuality = findItem(
-        rose.update_quality(items), 
-        itemName
-      ).quality
+    const updatedQuality = decreaseSellDays(items, itemName, 10).quality
     assert(updatedQuality > itemQuality)
   })
  
   it('Backstage passes increase in value by 2 as their date <10',()=>{
-    //console.log(findItem(items, 'Backstage passes to a TAFKAL80ETC concert'));
-  })
+    const itemName = 'Backstage passes to a TAFKAL80ETC concert'
+    const item = findItem(items, itemName)
+    const itemQuality = item.quality
+    let daysLeft = item.sell_in
+    while(daysLeft > 10){
+      daysLeft = findItem(
+        rose.update_quality(items), 
+        itemName
+      ).sell_in
+    }
+    const updatedQuality = findItem(
+        rose.update_quality(items), 
+        itemName
+      ).quality
+    assert(updatedQuality > itemQuality)  })
   // Set the date by repeated calls to update
 
   // it('Backstage passes increase in value by 3 as their date < 5',()=>{})
