@@ -98,7 +98,13 @@ describe("Test Gilded Rose", function () {
     let nextValue = decreaseSellDays(items, itemName, 4).quality
     assert(nextValue - startValue == 3)
   })
-  // it('Backstage passes value drops to 0 after their date <= 0',()=>{})
+  
+  it('Backstage passes value drops to 0 after their date <= 0',()=>{
+    const itemName = 'Backstage passes to a TAFKAL80ETC concert'
+    let value = decreaseSellDays(items, itemName, -1).quality
+    assert(value == 0)
+  })
+  
   it('Conjured items drop in quality twice as fast as normal items', () => {    
     const normalItemName = "+5 Dexterity Vest"
     const normalItemQuality = findItem(items, normalItemName).quality
