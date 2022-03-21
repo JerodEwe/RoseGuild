@@ -9,7 +9,6 @@ const items = clone(rose.items)
 describe("Test Gilded Rose", function () {
   const findItem = (items, target) => {
     const itemsFound = items.filter((item) => {
-      console.log('hi ', item.name)
       if (item.name == target) {
         return true
       }
@@ -73,63 +72,84 @@ describe("Test Gilded Rose", function () {
   const decreaseSellDays = (items, itemName, targetDays)=>{
     const item = findItem(items, itemName)
     let daysLeft = item.sell_in
+    let updatedItems = items
     while(daysLeft > targetDays){
-      let updatedItems = rose.update_quality(items)
-      console.log(updatedItems)
-      daysLeft = findItem(
+      updatedItems = rose.update_quality(updatedItems)
+      target = findItem(
         updatedItems, 
         itemName
-        ).sell_in
-      }
-      return item
-    } 
+      )
+      daysLeft = target.sell_in
+    }
+    return updatedItems
+  } 
 
   it('Backstage passes increase in quality as their date approaches now',()=>{
     const itemName = 'Backstage passes to a TAFKAL80ETC concert'
-    const itemQuality = findItem(items, itemName).quality
-    const updatedQuality = decreaseSellDays(items, itemName, 10).quality
-    assert(updatedQuality > itemQuality)
+    console.log('found:' ,  findItem(items, itemName))
+    const originalQuality = findItem(items, itemName).quality
+    console.log('decreased to: ',decreaseSellDays(items, itemName, 1))
+    const updatedQuality = findItem(decreaseSellDays(items, itemName, 1), itemName).quality
+    console.log('originalQuality', originalQuality)
+    console.log('updatedQuality', updatedQuality)
+    assert(updatedQuality > originalQuality)
   })
  
   it('Backstage passes increase in value by 2 as their date <10',()=>{
     const itemName = 'Backstage passes to a TAFKAL80ETC concert'
-    let startValue = decreaseSellDays(items, itemName, 10).quality
-    let nextValue = decreaseSellDays(items, itemName, 9).quality
-    assert(nextValue - startValue == 2)
+    const stuff = decreaseSellDays(items, itemName, 9)
+    console.log('decreasing sell_in to 9: ', stuff)
+    const updatedQuality = findItem(stuff, itemName).quality
+    console.log('item quality:' ,  updatedQuality)
+
+    const things = decreaseSellDays(items, itemName, 8)
+    const higherQuality = findItem(things, itemName).quality
+    console.log('updatedQ', updatedQuality)
+    console.log('higherQ', higherQuality)
+    assert(higherQuality - updatedQuality == 2)
   })
 
   it('Backstage passes increase in value by 3 as their date < 5',()=>{
     const itemName = 'Backstage passes to a TAFKAL80ETC concert'
-    let startValue = decreaseSellDays(items, itemName, 5).quality
-    let nextValue = decreaseSellDays(items, itemName, 4).quality
-    assert(nextValue - startValue == 3)
+    const stuff = decreaseSellDays(items, itemName, 5)
+    console.log('decreasing sell_in to 9: ', stuff)
+    const updatedQuality = findItem(stuff, itemName).quality
+    console.log('item quality:' ,  updatedQuality)
+
+    const things = decreaseSellDays(items, itemName, 4)
+    const higherQuality = findItem(things, itemName).quality
+    console.log('updatedQ', updatedQuality)
+    console.log('higherQ', higherQuality)
+    assert(higherQuality - updatedQuality == 3)
   })
   
   it('Backstage passes value drops to 0 after their date <= 0',()=>{
     const itemName = 'Backstage passes to a TAFKAL80ETC concert'
-    let value = decreaseSellDays(items, itemName, -1).quality
-    assert(value == 0)
+    const stuff = decreaseSellDays(items, itemName, 0)
+    const updatedQuality = findItem(stuff, itemName).quality
+    console.log('item quality:' ,  updatedQuality)
+    assert(updatedQuality == 0)
   })
   
   it('Conjured items drop in quality twice as fast as normal items', () => {    
     const normalItemName = "+5 Dexterity Vest"
     const normalItem = findItem(rose.items, normalItemName)
-    console.log('normalItem', normalItem)
+    //console.log('normalItem', normalItem)
     const normalItemQuality = normalItem.quality
     const updatedNormalItem = findItem(rose.update_quality(clone(items)), normalItemName);
-    console.log('updatedNormalItem: ', updatedNormalItem)
+    //console.log('updatedNormalItem: ', updatedNormalItem)
     const updatedNormalItemQuality = updatedNormalItem.quality
-    console.log('updatedNormalItemQuality: ', updatedNormalItemQuality)
+    //console.log('updatedNormalItemQuality: ', updatedNormalItemQuality)
     const normalQualityChange = normalItemQuality - updatedNormalItemQuality
-    console.log('normalQualityChange: ', normalQualityChange)
+    //console.log('normalQualityChange: ', normalQualityChange)
 
     const cake = 'Conjured Mana Cake'
     const conjuredItemQuality = findItem(rose.items, cake).quality
-    console.log('conjuredItemQuality: ', conjuredItemQuality)
+    //console.log('conjuredItemQuality: ', conjuredItemQuality)
     const updatedConjuredItemQuality = findItem(rose.update_quality(items), cake).quality
-    console.log('updatedConjuredItemQuality: ', updatedConjuredItemQuality)
+    //console.log('updatedConjuredItemQuality: ', updatedConjuredItemQuality)
     const conjuredItemQualityChange = conjuredItemQuality - updatedConjuredItemQuality
-    console.log('conjuredItemQualityChange: ', conjuredItemQualityChange)
+    //console.log('conjuredItemQualityChange: ', conjuredItemQualityChange)
     const ratio = conjuredItemQualityChange / normalQualityChange
     assert(ratio == 2)
   })

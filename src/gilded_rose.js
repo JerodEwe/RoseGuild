@@ -77,6 +77,23 @@ function update_quality(items) {
       item.quality + qualityChange)
   }
 
+  const backStagePass = (item)=>{
+    console.log('item: ', item)
+    if(item.sell_in <= 0){
+      return new Item(
+        item.name, 
+        item.sell_in - 1, 
+        0)
+    }
+    if(item.sell_in <= 5){
+      return update(item,-1,3);
+    }
+    if(item.sell_in <= 10){
+      return update(item,-1,2)
+    }
+    return update(item,-1,1)
+  }
+
   const updatedItems = items.map((item)=>{
     switch(item.name){
       case '+5 Dexterity Vest':
@@ -88,16 +105,7 @@ function update_quality(items) {
       case 'Sulfuras, Hand of Ragnaros':
         return update(item,0,0)
       case 'Backstage passes to a TAFKAL80ETC concert':
-        switch (item.sell_in){
-          case 10:
-            return update(item,-1,2)
-          case 5:
-            return update(item,-1,3)
-          case 0:
-            return update(item,-1,-item.quality)
-          default:
-            return update(item,-1,1)
-        }
+        return backStagePass(item)
       case 'Conjured Mana Cake':
         return update(item,-1,-2)
       default:
