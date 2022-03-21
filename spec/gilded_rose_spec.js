@@ -1,16 +1,20 @@
 const assert = require('assert');
 const rose = require('../src/gilded_rose.js');
 //dont change the items
-const items = JSON.parse(JSON.stringify(rose.items));
+const clone = (object)=>{
+  return JSON.parse(JSON.stringify(object));
+}
+const items = clone(rose.items)
 
 describe("Test Gilded Rose", function () {
   const findItem = (items, target) => {
     const itemsFound = items.filter((item) => {
+      console.log('hi ', item.name)
       if (item.name == target) {
-        return item
+        return true
       }
     })
-    return (itemsFound[0] ? itemsFound[0] : -1)
+    return itemsFound[0]
   }
 
   it("Should have the quality property for each item", () => {
@@ -70,13 +74,15 @@ describe("Test Gilded Rose", function () {
     const item = findItem(items, itemName)
     let daysLeft = item.sell_in
     while(daysLeft > targetDays){
+      let updatedItems = rose.update_quality(items)
+      console.log(updatedItems)
       daysLeft = findItem(
-        rose.update_quality(items), 
+        updatedItems, 
         itemName
-      ).sell_in
-    }
-    return item
-  } 
+        ).sell_in
+      }
+      return item
+    } 
 
   it('Backstage passes increase in quality as their date approaches now',()=>{
     const itemName = 'Backstage passes to a TAFKAL80ETC concert'
@@ -107,16 +113,26 @@ describe("Test Gilded Rose", function () {
   
   it('Conjured items drop in quality twice as fast as normal items', () => {    
     const normalItemName = "+5 Dexterity Vest"
-    const normalItemQuality = findItem(items, normalItemName).quality
-    const updatedNormalItemQuality = findItem(rose.update_quality(items), normalItemName).quality
+    const normalItem = findItem(rose.items, normalItemName)
+    console.log('normalItem', normalItem)
+    const normalItemQuality = normalItem.quality
+    const updatedNormalItem = findItem(rose.update_quality(clone(items)), normalItemName);
+    console.log('updatedNormalItem: ', updatedNormalItem)
+    const updatedNormalItemQuality = updatedNormalItem.quality
+    console.log('updatedNormalItemQuality: ', updatedNormalItemQuality)
     const normalQualityChange = normalItemQuality - updatedNormalItemQuality
+    console.log('normalQualityChange: ', normalQualityChange)
 
     const cake = 'Conjured Mana Cake'
-    const conjuredItemQuality = findItem(items, cake).quality
+    const conjuredItemQuality = findItem(rose.items, cake).quality
+    console.log('conjuredItemQuality: ', conjuredItemQuality)
     const updatedConjuredItemQuality = findItem(rose.update_quality(items), cake).quality
+    console.log('updatedConjuredItemQuality: ', updatedConjuredItemQuality)
     const conjuredItemQualityChange = conjuredItemQuality - updatedConjuredItemQuality
-    
+    console.log('conjuredItemQualityChange: ', conjuredItemQualityChange)
     const ratio = conjuredItemQualityChange / normalQualityChange
     assert(ratio == 2)
   })
+
+  //Once the sell_in days is less then zero, quality degrades twice as fast
 });

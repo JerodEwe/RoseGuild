@@ -1,3 +1,5 @@
+const { it } = require("mocha");
+
 //Dont touch, demons!
 function Item(name, sell_in, quality) {
   this.name = name;
@@ -15,52 +17,94 @@ items.push(new Item('Backstage passes to a TAFKAL80ETC concert', 15, 20));
 items.push(new Item('Conjured Mana Cake', 3, 6));
 
 function update_quality(items) {
-  for (var i = 0; i < items.length; i++) {
-    if (items[i].name != 'Aged Brie' && items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-      if (items[i].quality > 0) {
-        if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
-          items[i].quality = items[i].quality - 1
-        }
-      }
-    } else {
-      if (items[i].quality < 50) {
-        items[i].quality = items[i].quality + 1
-        if (items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
-          if (items[i].sell_in < 11) {
-            if (items[i].quality < 50) {
-              items[i].quality = items[i].quality + 1
-            }
-          }
-          if (items[i].sell_in < 6) {
-            if (items[i].quality < 50) {
-              items[i].quality = items[i].quality + 1
-            }
-          }
-        }
-      }
+  // for (var i = 0; i < items.length; i++) {
+  //   if (items[i].name != 'Conjured Mana Cake' && items[i].name != 'Aged Brie' && items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
+  //     if (items[i].quality > 0) {
+  //       if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
+  //         items[i].quality = items[i].quality - 1
+  //       }
+  //     }
+  //   } else {
+  //     if (items[i].quality < 50) {
+  //       items[i].quality = items[i].quality + 1
+  //       if (items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
+  //         if (items[i].sell_in < 11) {
+  //           if (items[i].quality < 50) {
+  //             items[i].quality = items[i].quality + 1
+  //           }
+  //         }
+  //         if (items[i].sell_in < 6) {
+  //           if (items[i].quality < 50) {
+  //             items[i].quality = items[i].quality + 1
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  //   if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
+  //     items[i].sell_in = items[i].sell_in - 1;
+  //   }
+  //   if (items[i].sell_in < 0) {
+  //     if (items[i].name != 'Aged Brie') {
+  //       if (items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
+  //         if (items[i].quality > 0) {
+  //           if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
+  //             items[i].quality = items[i].quality - 1
+  //           }
+  //           if (items[i].name == 'Conjured Mana Cake' && items[i].quality > 2){
+  //             items[i].quality = items[i].quality - 2
+  //           }
+  //         }
+  //       } else {
+  //         items[i].quality = items[i].quality - items[i].quality
+  //       }
+  //     } else {
+  //       if (items[i].quality < 50) {
+  //         items[i].quality = items[i].quality + 1
+  //       }
+  //     }
+  //   }
+  // }
+
+  const update = (item, sell_inChange, qualityChange)=>{
+    if((qualityChange + item.quality) < 0){
+      //Dont change below zero
+      return update(item,-1,-item.quality)
     }
-    if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
-      items[i].sell_in = items[i].sell_in - 1;
-    }
-    if (items[i].sell_in < 0) {
-      if (items[i].name != 'Aged Brie') {
-        if (items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-          if (items[i].quality > 0) {
-            if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
-              items[i].quality = items[i].quality - 1
-            }
-          }
-        } else {
-          items[i].quality = items[i].quality - items[i].quality
-        }
-      } else {
-        if (items[i].quality < 50) {
-          items[i].quality = items[i].quality + 1
-        }
-      }
-    }
+    return new Item(
+      item.name, 
+      item.sell_in + sell_inChange, 
+      item.quality + qualityChange)
   }
-  return items
+
+  const updatedItems = items.map((item)=>{
+    switch(item.name){
+      case '+5 Dexterity Vest':
+        return update(item,-1,-1)
+      case 'Aged Brie':
+        return update(item,-1,1)
+      case 'Elixir of the Mongoose':
+        return update(item,-1,-1)
+      case 'Sulfuras, Hand of Ragnaros':
+        return update(item,0,0)
+      case 'Backstage passes to a TAFKAL80ETC concert':
+        switch (item.sell_in){
+          case 10:
+            return update(item,-1,2)
+          case 5:
+            return update(item,-1,3)
+          case 0:
+            return update(item,-1,-item.quality)
+          default:
+            return update(item,-1,1)
+        }
+      case 'Conjured Mana Cake':
+        return update(item,-1,-2)
+      default:
+        return 'item not recognized.'
+    }
+  })
+  return updatedItems
 }
 
 exports.items = items;
