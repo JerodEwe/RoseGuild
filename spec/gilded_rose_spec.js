@@ -87,21 +87,10 @@ describe("Test Gilded Rose", function () {
  
   it('Backstage passes increase in value by 2 as their date <10',()=>{
     const itemName = 'Backstage passes to a TAFKAL80ETC concert'
-    const item = findItem(items, itemName)
-    const itemQuality = item.quality
-    let daysLeft = item.sell_in
-    while(daysLeft > 10){
-      daysLeft = findItem(
-        rose.update_quality(items), 
-        itemName
-      ).sell_in
-    }
-    const updatedQuality = findItem(
-        rose.update_quality(items), 
-        itemName
-      ).quality
-    assert(updatedQuality > itemQuality)  })
-  // Set the date by repeated calls to update
+    let startValue = decreaseSellDays(items, itemName, 10).quality
+    let nextValue = decreaseSellDays(items, itemName, 9).quality
+    assert(nextValue - startValue == 2)
+  })
 
   // it('Backstage passes increase in value by 3 as their date < 5',()=>{})
   // it('Backstage passes value drops to 0 after their date <= 0',()=>{})
